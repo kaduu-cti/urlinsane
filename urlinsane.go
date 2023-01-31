@@ -21,10 +21,11 @@
 package urlinsane
 
 import (
-	"sync"
 	"strings"
-	"golang.org/x/net/idna"
+	"sync"
+
 	"github.com/kaduu-cti/urlinsane/languages"
+	"golang.org/x/net/idna"
 )
 
 type (

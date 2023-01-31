@@ -21,16 +21,20 @@
 package urlinsane
 
 import (
+	"context"
 	"net"
 	"strings"
+	"time"
 
-	"github.com/glaslos/ssdeep"
 	"net/http"
 
+	"github.com/glaslos/ssdeep"
+
 	"fmt"
+	"io/ioutil"
+
 	"github.com/bobesa/go-domain-util/domainutil"
 	"github.com/oschwald/geoip2-golang"
-	"io/ioutil"
 )
 
 // The registry for extra functions
@@ -124,6 +128,16 @@ var whoisLookup = Extra{
 	Headers:     []string{"WHOIS?"},
 }
 
+var customResolver = &net.Resolver{
+	PreferGo: true,
+	Dial: func(ctx context.Context, network, address string) (net.Conn, error) {
+		d := net.Dialer{
+			Timeout: time.Millisecond * time.Duration(10000),
+		}
+		return d.DialContext(ctx, network, "1.1.1.1:53")
+	},
+}
+
 func init() {
 	FRegister("IDNA", idnaLookup)
 	FRegister("MX", mxLookup)
@@ -169,7 +183,7 @@ func mxLookupFunc(tr TypoResult) (results []TypoResult) {
 
 // nsLookupFunc
 func nsLookupFunc(tr TypoResult) (results []TypoResult) {
-	records, _ := net.LookupNS(tr.Variant.String())
+	records, _ := customResolver.LookupNS(context.Background(), tr.Variant.String())
 	for _, record := range records {
 		record := strings.TrimSuffix(record.Host, ".")
 		if !strings.Contains(tr.Data["NS"], record) {
@@ -325,8 +339,9 @@ func whoisLookupFunc(tr TypoResult) (results []TypoResult) {
 func checkIP(tr TypoResult) TypoResult {
 	ip4, _ := tr.Data["IPv4"]
 	ip6, _ := tr.Data["IPv6"]
+
 	if ip4 == "" || ip6 == "" {
-		records, _ := net.LookupIP(tr.Variant.String())
+		records, _ := customResolver.LookupIP(context.Background(), "ip4", tr.Variant.String())
 		for _, record := range records {
 			dotlen := strings.Count(record.String(), ".")
 			if dotlen == 3 {
