@@ -27,8 +27,8 @@ import (
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"github.com/rangertaha/urlinsane"
-	"github.com/rangertaha/urlinsane/languages"
+	"github.com/kaduu-cti/urlinsane"
+	"github.com/kaduu-cti/urlinsane/languages"
 	"github.com/spf13/cobra"
 )
 

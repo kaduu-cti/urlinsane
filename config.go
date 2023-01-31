@@ -25,7 +25,7 @@ import (
 	"strings"
 
 	"github.com/bobesa/go-domain-util/domainutil"
-	"github.com/rangertaha/urlinsane/languages"
+	"github.com/kaduu-cti/urlinsane/languages"
 	"github.com/spf13/cobra"
 )
 

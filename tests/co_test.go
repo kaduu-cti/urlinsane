@@ -22,8 +22,7 @@ package tests
 
 import (
 	"testing"
-
-	"github.com/rangertaha/urlinsane"
+	"github.com/kaduu-cti/urlinsane"
 )
 
 type testpair struct {

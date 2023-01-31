@@ -23,7 +23,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/rangertaha/urlinsane/server"
+	"github.com/kaduu-cti/urlinsane/server"
 )
 
 // serverCmd represents the server command
